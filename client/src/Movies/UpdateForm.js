@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useLocation, useParams, useHistory } from 'react-router-dom';
-import MovieList from './MovieList';
 
 const initialItem = {
     title: "",
     director: "",
     metascore: "",
-    stars: []
+    // stars: []
 }
 
 const UpdateForm = props => {
@@ -25,7 +24,7 @@ const UpdateForm = props => {
                 .then(res => setMovie(res.data))
                 .catch(err => console.log(err))
         }
-    }, [location.state, params.id])
+    }, [])
 
     const changeHandler = e => {
         // change metascore string into integer
@@ -35,6 +34,9 @@ const UpdateForm = props => {
             value = parseInt(value, 10) 
             // 10 is the radix: a # from 2-36 that represents the numeral system to be used
         }
+        // if (e.target.name === "stars") {
+        //     value = value.join('')
+        // }
 
         setMovie({
             ...movie,
@@ -48,8 +50,9 @@ const UpdateForm = props => {
         axios
             .put(`http://localhost:5000/api/movies/${movie.id}`, movie)
             .then(res => {
-                console.log(res)
-                props.setMovieList([...MovieList, movie])
+                console.log(res.data)
+                // res.data.stars.split(',')
+                setMovie(movie)
                 push(`/movies/${movie.id}`)
             })
             .catch(err => console.log(err))
@@ -80,13 +83,13 @@ const UpdateForm = props => {
                     value={movie.metascore}
                     placeholder='metascore'
                 />
-                <input
+                {/* <input
                     type='text'
                     name='stars'
                     onChange={changeHandler}
                     value={movie.stars}
                     placeholder='stars'
-                />
+                /> */}
                 <button>Update</button>
             </form>
         </div>
